@@ -35,27 +35,8 @@ object Application extends Controller {
   val sockJS = sockJStransport.action()
   
   sockJStransport.listen().map { promise =>
-    promise.success(new magicConnectionListener(AutowireServer.route[Api](Server)))
+    promise.success(new IdentifyingConnectionListener(AutowireServer.route[Api](Server)))
   }
-
-  // sockJStransport.listen().map {
-  //   _.success {
-  //     new ConnectionListener {
-  //       override def notify(connection: ConnectionHandle): Unit = {
-  //         connection.handlerPromise.success {
-  //           new MessageListener {
-  //             override def notify(pickle: String): Unit = {
-  //               val request: Request[String] = upickle.read[Request[String]](pickle)
-  //               val result: Future[String] = AutowireServer.route[Api](Server)(request)
-  //               result.foreach { connection write _ }
-  //             }
-  //             override def closed(): Unit = ()
-  //           }
-  //         }
-  //       }
-  //     }
-  //   }
-  // }
 }
 
 object Server extends Api { 
