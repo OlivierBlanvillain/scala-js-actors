@@ -14,7 +14,7 @@ import autowire.Core.Request
 
 import play.sockjs.api.SockJSRouter
 import transport.server._
-import transport.util._
+import transport.autowire._
 
 object Application extends Controller {
   
@@ -35,7 +35,7 @@ object Application extends Controller {
   val sockJS = sockJStransport.action()
   
   sockJStransport.listen().map { promise =>
-    promise.success(new IdentifyingConnectionListener(AutowireServer.route[Api](Server)))
+    promise.success(new IdentifiedConnectionListener(AutowireServer.route[Api](Server)))
   }
 }
 
