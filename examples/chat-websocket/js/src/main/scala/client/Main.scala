@@ -8,6 +8,7 @@ import akka.actor._
 import akka.scalajs.client.SockJSClient
 
 import models._
+import transport.client.SockJSClient.addressFromPlayRoute
 
 @JSExport("Client")
 object Main {
@@ -17,7 +18,8 @@ object Main {
 
   @JSExport
   def startup(): Unit = {
-    SockJSClient("http://localhost:9000/sockjs").connectWithActor(DemoActor.props)
+    println(addressFromPlayRoute().url)
+    SockJSClient(addressFromPlayRoute().url).connectWithActor(DemoActor.props)
   }
 }
 
@@ -35,7 +37,6 @@ class DemoActor(out: ActorRef) extends Actor {
       }
       jQ("#spinner").hide()
       jQ("#msgform").show()
-      jQ("body").append("lol")
       context.watch(peer)
       context.become(connected(peer))
   }

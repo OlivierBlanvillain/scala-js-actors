@@ -1,6 +1,8 @@
 package test
 
 import play.api.test.TestBrowser
+import play.api.test.WebDriverFactory
+import play.api.test.Helpers._
 import org.specs2.mutable.Specification
 import org.openqa.selenium._
 import org.openqa.selenium.firefox.FirefoxDriver
@@ -11,7 +13,9 @@ import org.openqa.selenium.phantomjs.{ PhantomJSDriverService, PhantomJSDriver }
 // Copied from https://github.com/buster84/playTutorialWithCucumber
 trait BrowserSpecification extends Specification {
 
-  def PHANTOM = {
+  def Firefox = WebDriverFactory(FIREFOX)
+
+  def Phantom = {
     val sCaps = new DesiredCapabilities()
     val phantomjsPath = System.getenv("PHANTOMJS_PATH")
     

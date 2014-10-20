@@ -14,15 +14,15 @@ object Application extends Controller {
   
   val peerMatcher = system.actorOf(PeerMatcher.props, "PeerMatcher")
 
-  def indexDev = Action {
-    Ok(views.html.index(devMode = true))
+  def indexDev = Action { implicit request =>
+    Ok(views.html.index(devMode = true, transport.server.SockJSServer.javascriptRoute(sockjs)))
   }
 
-  def indexOpt = Action {
-    Ok(views.html.index(devMode = false))
+  def indexOpt = Action { implicit request =>
+    Ok(views.html.index(devMode = false, transport.server.SockJSServer.javascriptRoute(sockjs)))
   }
 
-  def sockjs = SockJSServer.acceptWithActor { out =>
+  lazy val sockjs = SockJSServer.acceptWithActor { out =>
     UserActor.props(peerMatcher, out)
   }
 }
