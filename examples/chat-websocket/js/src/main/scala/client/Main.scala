@@ -5,7 +5,7 @@ import scala.scalajs.js
 import org.scalajs.jquery.{jQuery => jQ, _}
 
 import akka.actor._
-import akka.scalajs.client.WebSocketClient
+import akka.scalajs.client.SockJSClient
 
 import models._
 
@@ -17,7 +17,7 @@ object Main {
 
   @JSExport
   def startup(): Unit = {
-    WebSocketClient("ws://localhost:9000/websocket").connectWithActor(DemoActor.props)
+    SockJSClient("http://localhost:9000/sockjs").connectWithActor(DemoActor.props)
   }
 }
 
@@ -35,6 +35,7 @@ class DemoActor(out: ActorRef) extends Actor {
       }
       jQ("#spinner").hide()
       jQ("#msgform").show()
+      jQ("body").append("lol")
       context.watch(peer)
       context.become(connected(peer))
   }

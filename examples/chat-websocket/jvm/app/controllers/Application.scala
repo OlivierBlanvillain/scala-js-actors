@@ -4,7 +4,7 @@ import play.api.mvc._
 import play.api.libs.concurrent.Akka.system
 import play.api.Play.current
 
-import akka.scalajs.server.WebSocketServer
+import akka.scalajs.server.SockJSServer
 
 import actors._
 import models._
@@ -22,7 +22,7 @@ object Application extends Controller {
     Ok(views.html.index(devMode = false))
   }
 
-  def chatWSEntry = WebSocketServer.acceptWithActor { out =>
+  def sockjs = SockJSServer.acceptWithActor { out =>
     UserActor.props(peerMatcher, out)
   }
 }
