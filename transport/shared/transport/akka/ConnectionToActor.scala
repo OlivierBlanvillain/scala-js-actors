@@ -7,8 +7,7 @@ import org.scalajs.spickling._
 import transport._
 import scala.concurrent._
 
-// TODO: private
-class ConnectionToActor(connection: ConnectionHandle, handlerProps: ActorRef => Props)
+private class ConnectionToActor(connection: ConnectionHandle, handlerProps: ActorRef => Props)
       extends AbstractProxy(handlerProps) with Serializer {
   import AbstractProxy._
   

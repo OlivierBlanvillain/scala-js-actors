@@ -7,8 +7,7 @@ import akka.actor._
 
 import transport._
 
-// TODO: private
-class ActorToConnection(connectionPromise: Promise[ConnectionHandle])(
+private class ActorToConnection(connectionPromise: Promise[ConnectionHandle])(
       implicit ec: ExecutionContext) extends Actor {
   val messageListenerPromise = Promise[MessageListener]()
   var poorMansBuffer: Future[MessageListener] = messageListenerPromise.future
