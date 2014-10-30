@@ -17,7 +17,7 @@ private class ConnectionToActor(connection: ConnectionHandle, handlerProps: Acto
     
     connection.handlerPromise.success {
       new MessageListener {
-        override def notify(inboundPayload: String): Unit = self ! parse(inboundPayload)
+        def notify(inboundPayload: String): Unit = self ! parse(inboundPayload)
         override def closed(): Unit = self ! ConnectionClosed
       }
     }

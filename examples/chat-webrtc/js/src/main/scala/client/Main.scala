@@ -30,7 +30,7 @@ object Main {
 }
 
 class EstablishRtcActor(out: ActorRef) extends Actor {
-  override def receive: Receive = {
+  def receive: Receive = {
     case Connected(peer) =>
       val (actorConnection, futureConnection) = ActorToConnection(context.system)
       futureConnection.foreach { connection =>
