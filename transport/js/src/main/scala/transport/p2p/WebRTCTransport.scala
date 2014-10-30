@@ -25,13 +25,13 @@ class WebRTCTransport(implicit ec: ExecutionContext) extends Transport {
   def shutdown(): Unit = ()
 }
 
-class WebRTCPeer(signalingChannel: ConnectionHandle, priority: Double)(
+private class WebRTCPeer(signalingChannel: ConnectionHandle, priority: Double)(
       implicit ec: ExecutionContext) {
   RegisterWebRTCPicklers.registerPicklers()
   
   private val webRTCConnection = new webkitRTCPeerConnection(null, DataChannelsConstraint)
   private val connectionPromise = Promise[ConnectionHandle]()
-  private var isCaller: Boolean = _ // TODO: Should the default be false?
+  private var isCaller: Boolean = _
 
   signalingChannel.handlerPromise.success(new MessageListener {
     def notify(inboundPayload: String) = {
@@ -41,7 +41,7 @@ class WebRTCPeer(signalingChannel: ConnectionHandle, priority: Double)(
     }
     override def closed() = if(!future.isCompleted) {
       connectionPromise.failure(new IllegalStateException(
-        "The signaling channel was closed before the end of connection establishment."))
+        "Signaling channel closed before the end of connection establishment."))
     }
   })
 
@@ -62,6 +62,7 @@ class WebRTCPeer(signalingChannel: ConnectionHandle, priority: Double)(
   private def revievedViaSignaling(m: Any): Unit = {
     // Each message is received exactly once, in the order of appearance in this match.
     m match {
+      
       case Priority(hisPriority) =>
         isCaller = hisPriority > priority
         if(isCaller) {
@@ -132,7 +133,7 @@ class WebRTCPeer(signalingChannel: ConnectionHandle, priority: Double)(
 
 private object OptionalMediaConstraint extends RTCOptionalMediaConstraint {
   override val DtlsSrtpKeyAgreement: js.Boolean = false
-  override val RtpDataChannels: js.Boolean = true
+  override val RtpDataChannels: js.Boolean = false
 }
 private object DataChannelsConstraint extends RTCMediaConstraints {
   override val mandatory: RTCMediaOfferConstraints = null

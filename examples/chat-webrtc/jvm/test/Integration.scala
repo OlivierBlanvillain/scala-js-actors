@@ -12,6 +12,7 @@ class Integration extends BrowserSpecification {
 
     "be able to chat" in new WithTwoBrowsers(Chrome, Chrome) {
     // "be able to chat" in new WithTwoBrowsers(Phantom, Phantom) {
+    // "be able to chat" in new WithTwoBrowsers(Firefox, Firefox) {
       browser1 goTo "/"
       browser2 goTo "/"
       // browser2.waitUntil(100, TimeUnit.SECONDS)(browser2.pageSource.contains("display: block;"))
