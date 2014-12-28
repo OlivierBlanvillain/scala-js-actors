@@ -72,7 +72,7 @@ object WebWorkerRouter {
     val cruiseListener: js.Function1[js.Object, _] = { (event: js.Object) =>
       val data = event.asInstanceOf[MessageEvent].data
       global.console.log("Child WebWorkerRouter receives: " + js.JSON.stringify(data))
-      if (!(!data.isWebWorkerRouterPostMessage)) {
+      if (data.isWebWorkerRouterPostMessage.asInstanceOf[Boolean]) {
         forwardMessage(data)
       }
     }
@@ -80,15 +80,15 @@ object WebWorkerRouter {
     initializeListener = { (event: js.Object) =>
       val data = event.asInstanceOf[MessageEvent].data
       global.console.log("Child WebWorkerRouter receives: " + js.JSON.stringify(data))
-      if (!(!data.isWebWorkerRouterInitialize)) {
+      if (data.isWebWorkerRouterInitialize.asInstanceOf[Boolean]) {
         ParentWorkerConnection.removeEventListener(
             "message", initializeListener, useCapture = false)
         ParentWorkerConnection.addEventListener(
             "message", cruiseListener, useCapture = false)
 
-        val address = data.address.asInstanceOf[js.String]
+        val address = data.address.asInstanceOf[String]
         initializeWithAddress(address)
-      } else if (!(!data.isWebWorkerRouterPostMessage)) {
+      } else if (data.isWebWorkerRouterPostMessage.asInstanceOf[Boolean]) {
         onInitialized {
           forwardMessage(data)
         }
@@ -181,7 +181,7 @@ object WebWorkerRouter {
     worker.addEventListener("message", { (event: js.Object) =>
       val data = event.asInstanceOf[MessageEvent].data
       global.console.log("Parent WebWorkerRouter receives:", data)
-      if (!(!data.isWebWorkerRouterPostMessage))
+      if (data.isWebWorkerRouterPostMessage.asInstanceOf[Boolean])
         forwardMessage(data)
     }, useCapture = false)
 
@@ -217,11 +217,11 @@ object WebWorkerRouter {
   }
 
   private def forwardMessage(data: js.Dynamic): Unit = {
-    val address: String = data.address.asInstanceOf[js.String]
+    val address: String = data.address.asInstanceOf[String]
 
     if (address == myAddress) {
       // Arrived at destination
-      deliverMessage(data.system.asInstanceOf[js.String], data.message)
+      deliverMessage(data.system.asInstanceOf[String], data.message)
     } else if (address.startsWith(myAddress)) {
       // Destination is one of my descendants
       val childName = address.substring(myAddress.length).split("/")(0)

@@ -15,8 +15,8 @@ object ActorsTestFramework extends TestFramework {
     val oldSetInterval = global.setInterval
     val oldClearInterval = global.clearInterval
 
-    var lastID: js.Number = 0
-    global.setTimeout = { (f: js.Function0[_], delay: js.Number) =>
+    var lastID: Integer = 0
+    global.setTimeout = { (f: js.Function0[_], delay: Integer) =>
       eventQueue.enqueue(f)
       lastID += 1
       lastID

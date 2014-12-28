@@ -24,7 +24,7 @@ class JSQueue[A] {
 
     // shrink the underlying queue if necessary
     if (offset*2 >= queue.length.toInt) {
-      queue = queue.slice(offset)
+      queue = queue.jsSlice(offset)
       offset = 0
     }
 

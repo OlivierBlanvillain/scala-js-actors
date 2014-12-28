@@ -1,10 +1,8 @@
-import ScalaJSKeys._
-
 val commonSettings = Seq(
     organization := "org.scalajs",
     version := "0.1-SNAPSHOT",
-    scalaVersion := "2.11.2",
-    crossScalaVersions := Seq("2.11.2", "2.10.4"),
+    scalaVersion := "2.11.4",
+    // crossScalaVersions := Seq("2.11.2", "2.10.4"),
     normalizedName ~= { _.replace("scala-js", "scalajs") },
     scalacOptions ++= Seq(
         "-deprecation",
@@ -14,55 +12,61 @@ val commonSettings = Seq(
     )
 )
 
-lazy val root = project.in(file(".")).settings(commonSettings: _*)
-  .aggregate(actors, akkaWebsocketBridge)
+// lazy val root = project.in(file(".")).settings(commonSettings: _*)
+//   .aggregate(actors, akkaWebsocketBridge)
 
 lazy val actors = project.settings(commonSettings: _*)
   .settings(
       unmanagedSourceDirectories in Compile +=
         (sourceDirectory in Compile).value / "wscommon"
   )
+  .enablePlugins(ScalaJSPlugin)
+  .settings(name := "Scala.js actors")
+  .settings(libraryDependencies += "org.scalajs" %%% "scalajs-pickling" % "0.4-SNAPSHOT")
+  // .settings(libraryDependencies += "org.scala-lang.modules.scalajs" %% "scalajs-test-bridge" % scalaJSVersion % "test")
+  // .settings(scalaJSTestFramework in Test := "org.scalajs.actors.test.ActorsTestFramework")
 
-lazy val akkaWebsocketBridge = project.in(file("akka-websocket-bridge"))
-  .settings(commonSettings: _*)
-  .settings(
-      unmanagedSourceDirectories in Compile +=
-        (sourceDirectory in (actors, Compile)).value / "wscommon"
-  )
 
-lazy val examples = project.settings(commonSettings: _*)
-  .aggregate(webworkersExample, faultToleranceExample,
-      chatExample, chatExampleScalaJS)
+// lazy val akkaWebsocketBridge = project.in(file("akka-websocket-bridge"))
+//   .settings(commonSettings: _*)
+//   .settings(
+//       unmanagedSourceDirectories in Compile +=
+//         (sourceDirectory in (actors, Compile)).value / "wscommon"
+//   )
 
-lazy val webworkersExample = project.in(file("examples/webworkers"))
-  .settings(commonSettings: _*)
-  .dependsOn(actors)
+// lazy val examples = project.settings(commonSettings: _*)
+//   .aggregate(webworkersExample, faultToleranceExample,
+//       chatExample, chatExampleScalaJS)
 
-lazy val faultToleranceExample = project.in(file("examples/faulttolerance"))
-  .settings(commonSettings: _*)
-  .dependsOn(actors)
+// lazy val webworkersExample = project.in(file("examples/webworkers"))
+//   .settings(commonSettings: _*)
+//   .dependsOn(actors)
 
-lazy val chatExample = project.in(file("examples/chat-full-stack"))
-  .enablePlugins(PlayScala)
-  .settings(commonSettings: _*)
-  .dependsOn(akkaWebsocketBridge)
-  .settings(
-      unmanagedSourceDirectories in Compile +=
-        baseDirectory.value / "cscommon"
-  )
+// lazy val faultToleranceExample = project.in(file("examples/faulttolerance"))
+//   .settings(commonSettings: _*)
+//   .dependsOn(actors)
 
-lazy val chatExampleScalaJS = project.in(file("examples/chat-full-stack/scalajs"))
-  .settings((commonSettings ++ scalaJSSettings): _*)
-  .dependsOn(actors)
-  .settings(
-      unmanagedSourceDirectories in Compile +=
-        (baseDirectory in chatExample).value / "cscommon",
-      fastOptJS in Compile <<= (fastOptJS in Compile) triggeredBy (compile in (chatExample, Compile))
-  )
-  .settings(
-      Seq(fastOptJS, fullOptJS) map {
-        packageJSKey =>
-          crossTarget in (Compile, packageJSKey) :=
-            (baseDirectory in chatExample).value / "public/javascripts"
-      }: _*
-  )
+// lazy val chatExample = project.in(file("examples/chat-full-stack"))
+//   .enablePlugins(PlayScala)
+//   .settings(commonSettings: _*)
+//   .dependsOn(akkaWebsocketBridge)
+//   .settings(
+//       unmanagedSourceDirectories in Compile +=
+//         baseDirectory.value / "cscommon"
+//   )
+
+// lazy val chatExampleScalaJS = project.in(file("examples/chat-full-stack/scalajs"))
+//   .settings((commonSettings ++ scalaJSSettings): _*)
+//   .dependsOn(actors)
+//   .settings(
+//       unmanagedSourceDirectories in Compile +=
+//         (baseDirectory in chatExample).value / "cscommon",
+//       fastOptJS in Compile <<= (fastOptJS in Compile) triggeredBy (compile in (chatExample, Compile))
+//   )
+//   .settings(
+//       Seq(fastOptJS, fullOptJS) map {
+//         packageJSKey =>
+//           crossTarget in (Compile, packageJSKey) :=
+//             (baseDirectory in chatExample).value / "public/javascripts"
+//       }: _*
+//   )
