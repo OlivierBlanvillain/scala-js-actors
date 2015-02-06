@@ -1,7 +1,7 @@
 val commonSettings = Seq(
     organization := "org.scalajs",
     version := "0.1-SNAPSHOT",
-    scalaVersion := "2.11.4",
+    scalaVersion := "2.11.5",
     // crossScalaVersions := Seq("2.11.2", "2.10.4"),
     normalizedName ~= { _.replace("scala-js", "scalajs") },
     scalacOptions ++= Seq(

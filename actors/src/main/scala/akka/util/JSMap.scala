@@ -12,7 +12,7 @@ final class JSMap[A] private () extends Map[String, A]
   override def empty: JSMap[A] = new JSMap[A]
 
   override def get(key: String): Option[A] = {
-    if (dict.hasOwnProperty(key)) Some(dict(key))
+    if (dict.contains(key)) Some(dict(key))
     else None
   }
 
@@ -28,7 +28,7 @@ final class JSMap[A] private () extends Map[String, A]
 
   override def iterator: Iterator[(String, A)] = {
     for {
-      key <- js.Object.keys(dict).iterator
+      key <- js.Object.keys(dict.asInstanceOf[js.Object]).iterator
     } yield {
       (key, dict(key))
     }
